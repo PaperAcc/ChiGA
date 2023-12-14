@@ -20,15 +20,15 @@ from utils.config import bank, census, credit, compas
 # from scipy.spatial.distance import cdist
 # import copy
 
-# global 记录的是 可能歧视的 输入 集
+
 global_disc_inputs = set()
 global_disc_inputs_list = []
 local_disc_inputs = set()
 local_disc_inputs_list = []
 
-# tot_inputs 记录的是 所有产生的 输入 集
+
 tot_inputs = set()
-# 记录的是 sens 出现的 index ++
+
 location = np.zeros(21)
 
 # threshold_l = 7  # replace census-7,credit-14,bank-10
@@ -62,11 +62,6 @@ def ConstructExplainer(train_vectors, feature_names, class_names):
     return explainer
 
 
-'''
-    LIME 局部解释器 （已经排序）
-    选取 rank 靠前的
-'''
-
 
 def Searchseed(model, feature_names, sens_name, explainer, train_vectors, num, X_ori):
     seed = []
@@ -86,10 +81,6 @@ def Searchseed(model, feature_names, sens_name, explainer, train_vectors, num, X
         location[loc] = location[loc] + 1
         if loc < threshold_l:
             seed.append(x)
-
-            '''
-            imp 没有使用？
-            '''
 
             # imp = []
             # for item in feature_names:
@@ -127,7 +118,7 @@ def evaluate_local(inp):
     pre1 = 0
     for val in range(config.input_bounds[sensitive_param - 1][0], config.input_bounds[sensitive_param - 1][1] + 1):
         if val != inp_[sensitive_param - 1]:
-            # 进行一个替换
+
             inp1 = [int(i) for i in inp_]
             inp1[sensitive_param - 1] = val
 
@@ -166,11 +157,6 @@ def evaluate_local(inp):
 
 
 def xai_fair_testing(max_global, max_local):
-    # print(dataset)
-    # print(input_bounds)
-    # print(config.feature_name)
-    # print(model)
-    # quit()
 
     start = time.time()
     print(dataset, sensitive_param, max_global, max_local, classifier_name)
@@ -203,10 +189,7 @@ def xai_fair_testing(max_global, max_local):
     f.close()
 
     global_discovery = Global_Discovery()
-    '''
-    train_samples 随机输入集
-    与训练数据无关
-    '''
+
     train_samples = global_discovery(max_global, params, input_bounds, sensitive_param)
     train_samples = np.array(train_samples)
     # train_samples = X[np.random.choice(X.shape[0], max_global, replace=False)]
@@ -216,10 +199,7 @@ def xai_fair_testing(max_global, max_local):
     print(train_samples.shape)
     explainer = ConstructExplainer(X, feature_names, class_names)
 
-    '''
-        没有使用 X 输入数据集
-        返回的是 可能歧视数据集
-    '''
+
 
     print("-------Explainer Constructed!------")
     print("-------Searching Seed--------------")
@@ -262,9 +242,7 @@ def xai_fair_testing(max_global, max_local):
             mutation=mutation)
     # for random
 
-    '''
-        每 300 s 打印一次
-    '''
+
     count = 300
     for i in range(iteration):
         ga.evolution()

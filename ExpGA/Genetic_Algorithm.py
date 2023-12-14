@@ -72,9 +72,7 @@ class GA:
         # for s in self.POP:
         #     print(s)
         # quit()
-        '''
-            会有一堆 重复 的
-        '''
+
 
 
     def crossover(self):
